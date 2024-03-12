@@ -3,8 +3,6 @@
 <template>
   <div id="app">
     <form @submit.prevent="sendData">
-      <label for="type">type:</label>
-      <input type="text" id="type" v-model="type" required><br><br>
 
       <label for="coina">Coin A:</label>
       <input type="text" id="coina" v-model="coina" required><br><br>
@@ -25,7 +23,6 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      type: '',
       coina: '',
       coinb: '',
       amount: ''
@@ -41,19 +38,23 @@ export default {
 
       
       const dataToSend = {
-        type: this.type,
         coina: this.coina,
         coinb: this.coinb,
         amount: this.amount,
       };
 
 
-      for(let i = 0; i < 1; i++){
-        axios.post('http://127.0.0.1:8000/process_swap', dataToSend)
-        .then(result => {
-          console.log("Parsed result:", result.data); // 查看解析后的结果
-          })
-      }
+    const start = Date.now();
+    axios.post('http://127.0.0.1:8000/process_swap', dataToSend)
+      .then(result => {
+        const end = Date.now();
+    
+        // 计算请求-响应周期的持续时间
+        const duration = end - start;
+        console.log("duration:::::",duration)
+        console.log("Parsed result:", result.data); // 查看解析后的结果
+        })
+
     },
     validateAmount() {
       this.amount = this.amount.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
